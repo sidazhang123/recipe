@@ -2,8 +2,8 @@ package me.sidazhang.recipe.services;
 
 import me.sidazhang.recipe.models.Recipe;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface RecipeService {
-    Collection<Recipe> getRecipes();
+    Set<Recipe> getRecipes();
 }

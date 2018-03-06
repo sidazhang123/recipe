@@ -36,7 +36,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         recipeRepository.saveAll(setValues());
     }
 
-    private ArrayList<Recipe> setValues() {
+    public ArrayList<Recipe> setValues() {
         ArrayList<Recipe> arrayList = new ArrayList<>();
         Optional<Category> category = categoryRepository.findByCategoryName("Mexican");
         Optional<Category> category1 = categoryRepository.findByCategoryName("American");
