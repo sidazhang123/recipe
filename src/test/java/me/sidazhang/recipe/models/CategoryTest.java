@@ -12,6 +12,7 @@ public class CategoryTest {
     public void setUp() {
         category = new Category();
     }
+
     @Test
     public void getId() {
         Long l = 4L;

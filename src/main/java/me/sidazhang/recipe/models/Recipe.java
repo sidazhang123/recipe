@@ -6,8 +6,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Data
+@Entity
+//@ToString(exclude = {"ingredients","notes","categories"})
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,9 +50,8 @@ public class Recipe {
     }
 
 
-    public void setNotes(Notes notes) {
-        notes.setRecipe(this);
-        this.notes = notes;
+    protected boolean canEqual(Object other) {
+        return other instanceof Recipe;
     }
 
 }

@@ -56,6 +56,9 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         recipe.setNotes(notes);
         recipe.setDirection("first boil some water ");
         recipe.setDifficulty(Difficulty.HARD);
+        recipe.setServings(2);
+        recipe.setSource("Asia");
+        recipe.setUrl("http://");
         arrayList.add(recipe);
         return arrayList;
     }
