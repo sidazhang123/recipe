@@ -26,7 +26,7 @@ public class Recipe {
     private Set<Ingredient> ingredients = new HashSet<>();
     @Lob
     private Byte[] image;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Notes notes;
     @ManyToMany
     @JoinTable(name = "recipe_category",

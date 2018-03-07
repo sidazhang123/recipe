@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 public class RecipeServiceIT {
 
-    public static final String NEW_DESCRIPTION = "New Description";
+    private static final String NEW_DESCRIPTION = "New Description";
 
     @Autowired
     RecipeService recipeService;
