@@ -99,7 +99,7 @@
                 <div class="form-row">
                     <h1 class="col-md-11">Ingredients:</h1>
                     <div class="col-md-1">
-                        <a class="btn btn-secondary" href="#" role="button">Edit</a>
+                        <a class="btn btn-secondary" th:href="@{'/recipe/'+${recipe.id}+'/ingredients'}" role="button">Edit</a>
                     </div>
                 </div>
             </div>

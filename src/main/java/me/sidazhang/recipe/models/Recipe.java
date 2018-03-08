@@ -1,14 +1,15 @@
 package me.sidazhang.recipe.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
-//@ToString(exclude = {"ingredients","notes","categories"})
+@Getter
+@Setter
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,9 +50,5 @@ public class Recipe {
         return this;
     }
 
-
-    protected boolean canEqual(Object other) {
-        return other instanceof Recipe;
-    }
 
 }

@@ -13,8 +13,11 @@
 <div class="container mt-5">
 
     <div class="card ">
-        <div class="card-header bg-primary">
-            <h1>My Recipes！</h1>
+        <div class="form-row card-header bg-primary">
+            <h1 class="col-md-11">Recipes</h1>
+            <div class="col-md-1">
+                <a class="btn btn-warning" th:href="@{/recipe/new}">New</a>
+            </div>
         </div>
 
         <div class="card-body table table-responsive " th:if="${not #lists.isEmpty(recipes)}">
