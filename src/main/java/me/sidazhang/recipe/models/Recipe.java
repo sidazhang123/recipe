@@ -1,13 +1,15 @@
 package me.sidazhang.recipe.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,7 @@ public class Recipe {
     private Set<Ingredient> ingredients = new HashSet<>();
     @Lob
     private Byte[] image;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Notes notes;
     @ManyToMany
     @JoinTable(name = "recipe_category",
@@ -48,10 +50,5 @@ public class Recipe {
         return this;
     }
 
-
-    public void setNotes(Notes notes) {
-        notes.setRecipe(this);
-        this.notes = notes;
-    }
 
 }

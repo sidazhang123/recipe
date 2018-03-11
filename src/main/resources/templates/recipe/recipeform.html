@@ -1,0 +1,154 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        div.card {
+            border-color: maroon;
+            margin-bottom: 2rem;
+        }
+
+        div.card-header {
+            background-color: #ffbb33;
+        }
+    </style>
+</head>
+<body>
+<div class="container p-5">
+    <form th:object="${recipe}" th:action="@{/recipe/}" method="post">
+        <div class="card ">
+            <div class="card-header  ">
+                <div class="form-row">
+                    <h1 class="col-md-11">Edit Recipe Info:</h1>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-md-4 mb-3">
+                        <input type="hidden" th:field="*{id}"/>
+                        <h5 class="label" for="validationServer01">Recipe Description:</h5>
+                        <input type="text" class="form-control is-valid" id="validationServer01"
+                               th:field="*{description}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-4 mb-3">
+                        <h5 class="label" for="validationServer02">Categories:</h5>
+                    </div>
+                    <div class="col-md-4 mb-3 is-valid" id="validationServer02">
+                        <div class="radio">
+                            <label>
+                                <input type="checkbox" value=""/>
+                                Cat 1
+                            </label>
+                        </div>
+                        <div class="radio" th:remove="all">
+                            <label>
+                                <input type="checkbox" value=""/>
+                                Cat 2
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-3 mb-3">
+                        <h5 class="label">Prep Time:</h5>
+                        <input type="text" class="form-control" th:field="*{prepTime}"/>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h5 class="label">Cooktime:</h5>
+                        <input type="text" class="form-control" th:field="*{cookTime}"/>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h5 class="label">Difficulty:</h5>
+                        <select class="form-control" th:field="*{difficulty}">
+                            <option th:each="val:${T(me.sidazhang.recipe.models.Difficulty).values()}"
+                                    th:value="${val.name()}" th:text="${val.name()}">Easy
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-3 mb-3">
+                        <h5 class="label">Servings:</h5>
+                        <input type="text" class="form-control" th:field="*{servings}"/>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h5 class="label">Source:</h5>
+                        <input type="text" class="form-control" th:field="*{source}"/>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h5 class="label">URL:</h5>
+                        <input type="text" class="form-control" th:field="*{url}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-header  ">
+                <div class="form-row">
+                    <h1 class="col-md-11">Ingredients:</h1>
+                    <div class="col-md-1">
+                        <a class="btn btn-secondary" th:href="@{'/recipe/'+${recipe.id}+'/ingredients'}" role="button">Edit</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <ul>
+                            <li th:each="ingredient : ${recipe.ingredients}"
+                                th:text="${(ingredient.getAmount() +
+                                        ' ' + ingredient.uom.getUom() +
+                                        ' - ' + ingredient.getDescription())}">1 Teaspoon of Sugar
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-header  ">
+                <div class="form-row">
+                    <h1 class="col-md-11">Directions:</h1>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        <textarea class="form-control" rows="3" th:field="*{direction}"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-header  ">
+                <div class="form-row">
+                    <h1 class="col-md-11">Notes:</h1>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        <input type="hidden" th:field="*{notes.id}"/>
+                        <textarea class="form-control" rows="3" th:field="*{notes.recipeNotes}"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Submit form</button>
+    </form>
+</div>
+</body>
+</html>

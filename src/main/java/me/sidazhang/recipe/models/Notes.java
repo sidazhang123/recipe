@@ -1,13 +1,13 @@
 package me.sidazhang.recipe.models;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@EqualsAndHashCode(exclude = {"recipe"})
-@Data
+@Getter
+@Setter
 public class Notes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,5 +18,7 @@ public class Notes {
     @Lob
     private String recipeNotes;
 
+    public Notes() {
+    }
 
 }
