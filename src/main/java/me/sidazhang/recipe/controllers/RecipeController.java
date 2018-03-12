@@ -5,10 +5,13 @@ import me.sidazhang.recipe.commands.RecipeCommand;
 import me.sidazhang.recipe.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
 
 @Controller
 @Slf4j
@@ -28,8 +31,6 @@ public class RecipeController {
     @RequestMapping("/recipe/new")
     public String create(Model model) {
         RecipeCommand recipeCommand = recipeService.createRecipe();
-        log.warn("Controller:create");
-        log.warn(String.valueOf(recipeCommand == null));
         model.addAttribute("recipe", recipeCommand);
         return "recipe/recipeform";
     }
@@ -41,7 +42,13 @@ public class RecipeController {
     }
 
     @RequestMapping(value = "/recipe", method = RequestMethod.POST)
-    public String saveOrUpdate(@ModelAttribute RecipeCommand recipeCommand) {
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> {
+                log.debug(objectError.toString());
+            });
+            return "recipe/recipeform";
+        }
         RecipeCommand recipeCommand1 = recipeService.saveRecipeCommand(recipeCommand);
         return "redirect:/recipe/" + recipeCommand1.getId() + "/show";
     }

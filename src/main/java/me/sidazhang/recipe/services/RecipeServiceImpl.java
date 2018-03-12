@@ -47,8 +47,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     @Transactional
     public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
-        log.warn("saveRecipeCommand");
-        log.warn(String.valueOf(recipeCommand == null));
+
         Recipe detachedRecipe = recipeCommand2Recipe.convert(recipeCommand);
 
         Recipe savedRecipe = recipeRepository.save(detachedRecipe);
@@ -65,8 +64,6 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeCommand createRecipe() {
         RecipeCommand recipeCommand = new RecipeCommand();
-        log.warn("createRecipe");
-        log.warn(String.valueOf(recipeCommand == null));
         return saveRecipeCommand(recipeCommand);
     }
 
