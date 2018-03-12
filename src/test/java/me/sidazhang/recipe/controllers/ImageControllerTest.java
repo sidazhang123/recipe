@@ -33,7 +33,7 @@ public class ImageControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         imageController = new ImageController(imageService, recipeService);
-        mockMvc = MockMvcBuilders.standaloneSetup(imageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(imageController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -77,5 +77,21 @@ public class ImageControllerTest {
         byte[] reponseBytes = response.getContentAsByteArray();
 
         assertEquals(s.getBytes().length, reponseBytes.length);
+    }
+
+    @Test
+    public void testGetRecipeNumberFormatException() throws Exception {
+
+        mockMvc.perform(get("/recipe/fdsf/showimage"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("errors/400"));
+
+        MockMultipartFile multipartFile =
+                new MockMultipartFile("imagefile", "testing.txt", "text/plain",
+                        "Spring Framework Guru".getBytes());
+
+        mockMvc.perform(multipart("/recipe/dfsf/image").file(multipartFile))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("errors/400"));
     }
 }

@@ -1,6 +1,8 @@
 package me.sidazhang.recipe.services;
 
 import lombok.extern.slf4j.Slf4j;
+import me.sidazhang.recipe.exceptions.ImageFormatException;
+import me.sidazhang.recipe.exceptions.NotFoundException;
 import me.sidazhang.recipe.models.Recipe;
 import me.sidazhang.recipe.repositories.RecipeRepository;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void saveImageFile(Long recipeId, MultipartFile file) throws Exception {
+    public void saveImageFile(Long recipeId, MultipartFile file) {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if (optionalRecipe.isPresent()) {
             Recipe recipe = optionalRecipe.get();
@@ -36,17 +38,18 @@ public class ImageServiceImpl implements ImageService {
                 recipeRepository.save(recipe);
             } catch (IOException e) {
                 log.warn("Failed to convert Image to byte array");
+                throw new ImageFormatException("Failed to convert Image to byte array");
             }
 
         } else {
-            throw new Exception("Cannot find recipe by this id");
+            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
         }
 
     }
 
     @Override
     @ResponseBody
-    public ResponseEntity<byte[]> renderImage(Long recipeId) throws Exception {
+    public ResponseEntity<byte[]> renderImage(Long recipeId) {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if (optionalRecipe.isPresent()) {
             Recipe recipe = optionalRecipe.get();
@@ -60,7 +63,7 @@ public class ImageServiceImpl implements ImageService {
                 bytes1[i++] = b;
             return ResponseEntity.ok().contentLength(bytes.length).body(bytes1);
         } else {
-            throw new Exception("Recipe not found");
+            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
         }
     }
 }
