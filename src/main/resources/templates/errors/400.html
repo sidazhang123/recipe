@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../static/css/exception.css" th:href="@{/css/exception.css}">
+    <title>404</title>
+</head>
+<body>
+<div id="clouds">
+    <div class="cloud x1"></div>
+    <div class="cloud x1_5"></div>
+    <div class="cloud x2"></div>
+    <div class="cloud x3"></div>
+    <div class="cloud x4"></div>
+    <div class="cloud x5"></div>
+</div>
+<div class='c'>
+    <div class='_status_code'>400</div>
+    <hr>
+    <div class='_1'>BAD REQUEST For</div>
+    <div class='_2' th:text="${exception.getMessage()}">THE PAGE</div>
+
+    <a class='btn' href='/'>BACK TO MARS</a>
+</div>
+</body>
+</html>

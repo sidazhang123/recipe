@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sidazhang.recipe.commands.RecipeCommand;
 import me.sidazhang.recipe.converters.Recipe2RecipeCommand;
 import me.sidazhang.recipe.converters.RecipeCommand2Recipe;
+import me.sidazhang.recipe.exceptions.NotFoundException;
 import me.sidazhang.recipe.models.Recipe;
 import me.sidazhang.recipe.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe findById(Long id) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
         if (!recipeOptional.isPresent()) {
-            throw new RuntimeException("Recipe with this ID Not Found.");
+            throw new NotFoundException("Recipe with ID value " + id.toString());
         }
         return recipeOptional.get();
     }
@@ -57,6 +58,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeCommand findCommandById(Long id) {
+
         return recipe2RecipeCommand.convert(findById(id));
     }
 

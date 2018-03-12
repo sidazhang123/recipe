@@ -36,4 +36,6 @@ public class ImageController {
     public ResponseEntity<byte[]> renderImage(@PathVariable Long id) throws Exception {
         return imageService.renderImage(id);
     }
+
+
 }

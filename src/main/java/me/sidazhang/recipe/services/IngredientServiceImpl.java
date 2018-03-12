@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sidazhang.recipe.commands.IngredientCommand;
 import me.sidazhang.recipe.converters.Ingredient2IngredientCommand;
 import me.sidazhang.recipe.converters.IngredientCommand2Ingredient;
+import me.sidazhang.recipe.exceptions.NotFoundException;
 import me.sidazhang.recipe.models.Ingredient;
 import me.sidazhang.recipe.models.Recipe;
 import me.sidazhang.recipe.repositories.RecipeRepository;
@@ -37,7 +38,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (!recipeOptional.isPresent()) {
 
             log.error("recipe id not found. Id: " + recipeId);
-            throw new Exception();
+            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
         }
 
         Recipe recipe = recipeOptional.get();
@@ -49,7 +50,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (!ingredientCommandOptional.isPresent()) {
 
             log.error("Ingredient id not found: " + ingredientId);
-            throw new Exception();
+            throw new NotFoundException("Ingredient with ID value " + ingredientId.toString());
         }
 
         return ingredientCommandOptional.get();
@@ -106,13 +107,13 @@ public class IngredientServiceImpl implements IngredientService {
     public void deleteById(Long recipeId, Long ingredientId) throws Exception {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if (!optionalRecipe.isPresent()) {
-            throw new Exception("Cannot find matched recipe by recipeId");
+            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
         } else {
             Recipe recipe = optionalRecipe.get();
             Optional<Ingredient> ingredient2Del = recipe.getIngredients().stream().filter(ingredient -> ingredient.getId().equals(ingredientId))
                     .findFirst();
             if (!ingredient2Del.isPresent()) {
-                throw new Exception("Cannot find matched ingredient by ingredientId");
+                throw new NotFoundException("Ingredient with ID value " + ingredientId.toString());
             } else {
                 ingredient2Del.get().setRecipe(null);
                 recipe.getIngredients().remove(ingredient2Del.get());

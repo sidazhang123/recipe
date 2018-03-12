@@ -1,7 +1,9 @@
 package me.sidazhang.recipe.controllers;
 
 import me.sidazhang.recipe.commands.RecipeCommand;
+import me.sidazhang.recipe.exceptions.NotFoundException;
 import me.sidazhang.recipe.models.Recipe;
+import me.sidazhang.recipe.repositories.RecipeRepository;
 import me.sidazhang.recipe.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +25,14 @@ public class RecipeControllerTest {
     RecipeService recipeService;
     RecipeController recipeController;
     MockMvc mockMvc;
+    @Mock
+    RecipeRepository recipeRepository;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         recipeController = new RecipeController(recipeService);
-        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -88,5 +92,23 @@ public class RecipeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
         verify(recipeService, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    public void testGetRecipeNotFound() throws Exception {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("errors/404"));
+    }
+
+    @Test
+    public void testGetRecipeNumberFormatException() throws Exception {
+
+        mockMvc.perform(get("/recipe/fdsf/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("errors/400"));
     }
 }
