@@ -11,7 +11,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
@@ -22,15 +21,15 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class ImageServiceImplTest {
 
     @Mock
-    RecipeRepository recipeRepository;
+    private RecipeRepository recipeRepository;
 
-    ImageService imageService;
+    private ImageService imageService;
 
     @Before
     public void setUp() throws Exception {
@@ -46,15 +45,15 @@ public class ImageServiceImplTest {
                 "Spring Framework Guru".getBytes());
 
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
         ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 
         //when
-        imageService.saveImageFile(1L, multipartFile);
+        imageService.saveImageFile("1", multipartFile);
 
         //then
         verify(recipeRepository, times(1)).save(argumentCaptor.capture());
@@ -62,7 +61,7 @@ public class ImageServiceImplTest {
         assertEquals(multipartFile.getBytes().length, savedRecipe.getImage().length);
     }
 
-    private byte[] extractBytes(String ImageName) throws IOException {
+    private byte[] extractBytes(String ImageName) throws IOException, NullPointerException {
         // open image
         ClassLoader classLoader = getClass().getClassLoader();
         File imgPath = new File(classLoader.getResource(ImageName).getFile());
@@ -75,11 +74,7 @@ public class ImageServiceImplTest {
         return (data.getData());
     }
 
-    private static void showIcon(BufferedImage image) {
-        ImageIcon icon = new ImageIcon(image);
-        JLabel label = new JLabel(icon, JLabel.CENTER);
-        JOptionPane.showMessageDialog(null, label, "icon", -1);
-    }
+
 
     @Test
     public void testRenderImage() throws Exception {
@@ -89,10 +84,10 @@ public class ImageServiceImplTest {
         Arrays.setAll(bytes1, n -> bytes[n]);
         recipe.setImage(bytes1);
         Optional<Recipe> optionalRecipe = Optional.of(recipe);
-        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+        when(recipeRepository.findById(anyString())).thenReturn(optionalRecipe);
 
 
-        assertArrayEquals(bytes, imageService.renderImage(1L).getBody());
+        assertArrayEquals(bytes, imageService.renderImage("1").getBody());
 
     }
 

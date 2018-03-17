@@ -36,10 +36,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public Recipe findById(Long id) {
+    public Recipe findById(String id) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
         if (!recipeOptional.isPresent()) {
-            throw new NotFoundException("Recipe with ID value " + id.toString());
+            throw new NotFoundException("Recipe with ID value " + id);
         }
         return recipeOptional.get();
     }
@@ -56,9 +56,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeCommand findCommandById(Long id) {
-
+    public RecipeCommand findCommandById(String id) {
         return recipe2RecipeCommand.convert(findById(id));
+
     }
 
     @Override
@@ -68,7 +68,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         recipeRepository.deleteById(id);
     }
 }

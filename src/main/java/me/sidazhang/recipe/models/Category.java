@@ -1,27 +1,19 @@
 package me.sidazhang.recipe.models;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.Set;
 
 
 @Getter
 @Setter
-@Entity
-@EqualsAndHashCode(exclude = {"recipes"})
+@Document
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String categoryName;
-    @ManyToMany(mappedBy = "categories")
+    @DBRef
     private Set<Recipe> recipes;
-
-    public Category() {
-    }
-
-
 }

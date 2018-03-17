@@ -1,25 +1,20 @@
 package me.sidazhang.recipe.models;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"recipe"})
 public class Ingredient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id = UUID.randomUUID().toString();
     private String description;
     private BigDecimal amount;
-    @ManyToOne
-    private Recipe recipe;
-    @OneToOne
+    //    private Recipe recipe;
+    @DBRef
     private UnitOfMeasure uom;
 
     public Ingredient() {

@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class CategoryTest {
-    Category category;
+    private Category category;
 
     @Before
     public void setUp() {
@@ -15,7 +15,7 @@ public class CategoryTest {
 
     @Test
     public void getId() {
-        Long l = 4L;
+        String l = "4";
         category.setId(l);
         assertEquals(l, category.getId());
     }

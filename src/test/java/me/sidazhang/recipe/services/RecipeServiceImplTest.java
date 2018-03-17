@@ -18,16 +18,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
-    RecipeServiceImpl recipeService;
+    private RecipeServiceImpl recipeService;
     @Mock
-    RecipeRepository recipeRepository;
+    private RecipeRepository recipeRepository;
     @Mock
-    RecipeCommand2Recipe recipeCommand2Recipe;
+    private RecipeCommand2Recipe recipeCommand2Recipe;
     @Mock
-    Recipe2RecipeCommand recipe2RecipeCommand;
+    private Recipe2RecipeCommand recipe2RecipeCommand;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         recipeService = new RecipeServiceImpl(recipeRepository, recipeCommand2Recipe, recipe2RecipeCommand);
 
@@ -35,15 +35,15 @@ public class RecipeServiceImplTest {
     }
 
     @Test
-    public void getRecipeById() throws Exception {
+    public void getRecipeById() {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         Optional<Recipe> optionalRecipe = Optional.of(recipe);
-        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
-        Recipe recipe1 = recipeService.findById(1L);
+        when(recipeRepository.findById(anyString())).thenReturn(optionalRecipe);
+        Recipe recipe1 = recipeService.findById("1");
         assertNotNull("findById returns NULL", recipe1);
         assertEquals(recipe, recipe1);
-        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeRepository, never()).findAll();
     }
 
@@ -54,12 +54,12 @@ public class RecipeServiceImplTest {
         when(recipeRepository.findAll()).thenReturn(recipes);
         assertEquals(1, recipeService.getRecipes().size());
         verify(recipeRepository, times(1)).findAll();
-        verify(recipeRepository, never()).findById(anyLong());
+        verify(recipeRepository, never()).findById(anyString());
     }
 
     @Test
-    public void deleteById() throws Exception {
-        recipeService.deleteById(2L);
-        verify(recipeRepository, times(1)).deleteById(anyLong());
+    public void deleteById() {
+        recipeService.deleteById("2");
+        verify(recipeRepository, times(1)).deleteById(anyString());
     }
 }

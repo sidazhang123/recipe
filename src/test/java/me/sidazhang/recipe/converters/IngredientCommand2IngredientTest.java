@@ -3,7 +3,6 @@ package me.sidazhang.recipe.converters;
 import me.sidazhang.recipe.commands.IngredientCommand;
 import me.sidazhang.recipe.commands.UnitOfMeasureCommand;
 import me.sidazhang.recipe.models.Ingredient;
-import me.sidazhang.recipe.models.Recipe;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,31 +12,31 @@ import static org.junit.Assert.*;
 
 public class IngredientCommand2IngredientTest {
 
-    public static final Recipe RECIPE = new Recipe();
-    public static final BigDecimal AMOUNT = new BigDecimal("1");
-    public static final String DESCRIPTION = "Cheeseburger";
-    public static final Long ID_VALUE = new Long(1L);
-    public static final Long UOM_ID = new Long(2L);
 
-    IngredientCommand2Ingredient ingredientCommand2Ingredient;
+    private static final BigDecimal AMOUNT = new BigDecimal(1);
+    private static final String DESCRIPTION = "Cheeseburger";
+    private static final String ID_VALUE = "1";
+    private static final String UOM_ID = "2";
+
+    private IngredientCommand2Ingredient ingredientCommand2Ingredient;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ingredientCommand2Ingredient = new IngredientCommand2Ingredient(new UnitOfMeasureCommand2UnitOfMeasure());
     }
 
     @Test
-    public void testNullObject() throws Exception {
+    public void testNullObject() {
         assertNull(ingredientCommand2Ingredient.convert(null));
     }
 
     @Test
-    public void testEmptyObject() throws Exception {
+    public void testEmptyObject() {
         assertNotNull(ingredientCommand2Ingredient.convert(new IngredientCommand()));
     }
 
     @Test
-    public void convert() throws Exception {
+    public void convert() {
         //given
         IngredientCommand command = new IngredientCommand();
         command.setId(ID_VALUE);
@@ -60,13 +59,12 @@ public class IngredientCommand2IngredientTest {
     }
 
     @Test
-    public void convertWithNullUOM() throws Exception {
+    public void convertWithNullUOM() {
         //given
         IngredientCommand command = new IngredientCommand();
         command.setId(ID_VALUE);
         command.setAmount(AMOUNT);
         command.setDescription(DESCRIPTION);
-        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
 
 
         //when

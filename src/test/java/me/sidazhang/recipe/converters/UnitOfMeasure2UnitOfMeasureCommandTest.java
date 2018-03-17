@@ -12,37 +12,37 @@ import static org.junit.Assert.*;
  */
 public class UnitOfMeasure2UnitOfMeasureCommandTest {
 
-    public static final String DESCRIPTION = "description";
-    public static final Long LONG_VALUE = new Long(1L);
+    private static final String DESCRIPTION = "description";
+    private static final String String_VALUE = "1";
 
-    UnitOfMeasure2UnitOfMeasureCommand unitOfMeasure2UnitOfMeasureCommand;
+    private UnitOfMeasure2UnitOfMeasureCommand unitOfMeasure2UnitOfMeasureCommand;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         unitOfMeasure2UnitOfMeasureCommand = new UnitOfMeasure2UnitOfMeasureCommand();
     }
 
     @Test
-    public void testNullObjectConvert() throws Exception {
+    public void testNullObjectConvert() {
         assertNull(unitOfMeasure2UnitOfMeasureCommand.convert(null));
     }
 
     @Test
-    public void testEmptyObj() throws Exception {
+    public void testEmptyObj() {
         assertNotNull(unitOfMeasure2UnitOfMeasureCommand.convert(new UnitOfMeasure()));
     }
 
     @Test
-    public void convert() throws Exception {
+    public void convert() {
         //given
         UnitOfMeasure uom = new UnitOfMeasure();
-        uom.setId(LONG_VALUE);
+        uom.setId(String_VALUE);
         uom.setUom(DESCRIPTION);
         //when
         UnitOfMeasureCommand unitOfMeasureCommand = unitOfMeasure2UnitOfMeasureCommand.convert(uom);
 
         //then
-        assertEquals(LONG_VALUE, unitOfMeasureCommand.getId());
+        assertEquals(String_VALUE, unitOfMeasureCommand.getId());
         assertEquals(DESCRIPTION, unitOfMeasureCommand.getUom());
     }
 

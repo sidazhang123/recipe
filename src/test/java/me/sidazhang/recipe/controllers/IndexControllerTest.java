@@ -23,13 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class IndexControllerTest {
     @Mock
-    RecipeService recipeService;
+    private RecipeService recipeService;
     @Mock
-    Model model;
-    IndexController indexController;
+    private Model model;
+    private IndexController indexController;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         indexController = new IndexController(recipeService);
     }
@@ -40,7 +40,7 @@ public class IndexControllerTest {
         Set<Recipe> recipeSet = new HashSet<>();
         recipeSet.add(new Recipe());
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         recipeSet.add(recipe);
         when(recipeService.getRecipes()).thenReturn(recipeSet);
         ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);

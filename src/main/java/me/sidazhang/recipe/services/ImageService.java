@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
-    void saveImageFile(Long recipeId, MultipartFile file) throws Exception;
+    void saveImageFile(String recipeId, MultipartFile file) throws Exception;
 
-    ResponseEntity<byte[]> renderImage(Long recipeId) throws Exception;
+    ResponseEntity<byte[]> renderImage(String recipeId) throws Exception;
 }

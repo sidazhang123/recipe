@@ -9,27 +9,27 @@ import static org.junit.Assert.*;
 
 public class CategoryCommand2CategoryTest {
 
-    public static final Long ID_VALUE = new Long(1L);
-    public static final String DESCRIPTION = "description";
-    CategoryCommand2Category conveter;
+    private static final String ID_VALUE = "1";
+    private static final String DESCRIPTION = "description";
+    private CategoryCommand2Category conveter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         conveter = new CategoryCommand2Category();
     }
 
     @Test
-    public void testNullObject() throws Exception {
+    public void testNullObject() {
         assertNull(conveter.convert(null));
     }
 
     @Test
-    public void testEmptyObject() throws Exception {
+    public void testEmptyObject() {
         assertNotNull(conveter.convert(new CategoryCommand()));
     }
 
     @Test
-    public void convert() throws Exception {
+    public void convert() {
         //given
         CategoryCommand categoryCommand = new CategoryCommand();
         categoryCommand.setId(ID_VALUE);

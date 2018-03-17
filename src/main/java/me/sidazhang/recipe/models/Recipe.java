@@ -2,18 +2,19 @@ package me.sidazhang.recipe.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Getter
 @Setter
+@Document
 public class Recipe {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String description;
     private Integer prepTime;
     private Integer cookTime;
@@ -21,34 +22,31 @@ public class Recipe {
     private String source;
     private String url;
     private String direction;
-    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
-    @Lob
     private Byte[] image;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Notes notes;
-    @ManyToMany
-    @JoinTable(name = "recipe_category",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @DBRef
     private Set<Category> categories = new HashSet<>();
 
     public Recipe() {
     }
 
-    public Recipe addCategory(Category category) {
-        category.getRecipes().add(this);
-        this.getCategories().add(category);
-        return this;
+    //    public Recipe addCategory(Category category) {
+//        category.getRecipes().add(this);
+//        this.getCategories().add(category);
+//        return this;
+//    }
+    public void setNotes(Notes notes) {
+        if (notes != null) {
+            this.notes = notes;
+//            notes.setRecipe(this);
+        }
     }
 
     public Recipe addIngredient(Ingredient ingredient) {
-        ingredient.setRecipe(this);
-        this.getIngredients().add(ingredient);
+        this.ingredients.add(ingredient);
         return this;
     }
-
 
 }

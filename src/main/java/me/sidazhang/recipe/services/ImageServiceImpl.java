@@ -26,7 +26,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void saveImageFile(Long recipeId, MultipartFile file) {
+    public void saveImageFile(String recipeId, MultipartFile file) {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if (optionalRecipe.isPresent()) {
             Recipe recipe = optionalRecipe.get();
@@ -42,14 +42,14 @@ public class ImageServiceImpl implements ImageService {
             }
 
         } else {
-            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
+            throw new NotFoundException("Recipe with ID value " + recipeId);
         }
 
     }
 
     @Override
     @ResponseBody
-    public ResponseEntity<byte[]> renderImage(Long recipeId) {
+    public ResponseEntity<byte[]> renderImage(String recipeId) {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if (optionalRecipe.isPresent()) {
             Recipe recipe = optionalRecipe.get();
@@ -63,7 +63,7 @@ public class ImageServiceImpl implements ImageService {
                 bytes1[i++] = b;
             return ResponseEntity.ok().contentLength(bytes.length).body(bytes1);
         } else {
-            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
+            throw new NotFoundException("Recipe with ID value " + recipeId);
         }
     }
 }

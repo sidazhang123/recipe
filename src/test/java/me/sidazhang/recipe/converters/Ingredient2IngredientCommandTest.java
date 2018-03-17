@@ -15,35 +15,35 @@ import static org.junit.Assert.*;
 public class Ingredient2IngredientCommandTest {
 
     public static final Recipe RECIPE = new Recipe();
-    public static final BigDecimal AMOUNT = new BigDecimal("1");
-    public static final String DESCRIPTION = "Cheeseburger";
-    public static final Long UOM_ID = new Long(2L);
-    public static final Long ID_VALUE = new Long(1L);
+    private static final BigDecimal AMOUNT = new BigDecimal(1);
+    private static final String DESCRIPTION = "Cheeseburger";
+    private static final String UOM_ID = "2";
+    private static final String ID_VALUE = "1";
 
 
-    Ingredient2IngredientCommand converter;
+    private Ingredient2IngredientCommand converter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         converter = new Ingredient2IngredientCommand(new UnitOfMeasure2UnitOfMeasureCommand());
     }
 
     @Test
-    public void testNullConvert() throws Exception {
+    public void testNullConvert() {
         assertNull(converter.convert(null));
     }
 
     @Test
-    public void testEmptyObject() throws Exception {
+    public void testEmptyObject() {
         assertNotNull(converter.convert(new Ingredient()));
     }
 
     @Test
-    public void testConvertNullUOM() throws Exception {
+    public void testConvertNullUOM() {
         //given
         Ingredient ingredient = new Ingredient();
         ingredient.setId(ID_VALUE);
-        ingredient.setRecipe(RECIPE);
+//        ingredient.setRecipe(RECIPE);
         ingredient.setAmount(AMOUNT);
         ingredient.setDescription(DESCRIPTION);
         ingredient.setUom(null);
@@ -57,11 +57,11 @@ public class Ingredient2IngredientCommandTest {
     }
 
     @Test
-    public void testConvertWithUom() throws Exception {
+    public void testConvertWithUom() {
         //given
         Ingredient ingredient = new Ingredient();
         ingredient.setId(ID_VALUE);
-        ingredient.setRecipe(RECIPE);
+//        ingredient.setRecipe(RECIPE);
         ingredient.setAmount(AMOUNT);
         ingredient.setDescription(DESCRIPTION);
 

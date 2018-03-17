@@ -20,20 +20,20 @@ public class ImageController {
     }
 
     @RequestMapping("recipe/{id}/image")
-    public String showUploadForm(@PathVariable Long id, Model model) {
+    public String showUploadForm(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findCommandById(id));
         return "recipe/imageuploadform";
     }
 
     @RequestMapping(value = "recipe/{id}/image", method = RequestMethod.POST)
     public String handleImagePost(@PathVariable String id, @RequestParam("imagefile") MultipartFile file) throws Exception {
-        imageService.saveImageFile(Long.valueOf(id), file);
+        imageService.saveImageFile(id, file);
         return "redirect:/recipe/" + id + "/show";
     }
 
     @RequestMapping(value = "recipe/{id}/showimage", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
-    public ResponseEntity<byte[]> renderImage(@PathVariable Long id) throws Exception {
+    public ResponseEntity<byte[]> renderImage(@PathVariable String id) throws Exception {
         return imageService.renderImage(id);
     }
 

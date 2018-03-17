@@ -22,7 +22,10 @@
     <div class="card ">
         <div class="card-header bg-primary">
             <div class="form-row">
-                <h1 class="col-md-11">Ingredients</h1>
+                <h1 class="col-md-9">Ingredients</h1>
+                <div class="col-md-2">
+                    <a class="btn btn-warning" th:href="@{'/recipe/'+${recipe.id}+'/update'}">Update Recipe</a>
+                </div>
                 <div class="col-md-1">
                     <a class="btn btn-warning" th:href="@{'/recipe/'+${recipe.id}+'/ingredient/new'}">New</a>
                 </div>

@@ -7,10 +7,10 @@ import me.sidazhang.recipe.converters.IngredientCommand2Ingredient;
 import me.sidazhang.recipe.exceptions.NotFoundException;
 import me.sidazhang.recipe.models.Ingredient;
 import me.sidazhang.recipe.models.Recipe;
+import me.sidazhang.recipe.models.UnitOfMeasure;
 import me.sidazhang.recipe.repositories.RecipeRepository;
 import me.sidazhang.recipe.repositories.UnitOfMeasureRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -31,14 +31,14 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientCommand findByIngredientIdAndRecipeId(Long recipeId, Long ingredientId) throws Exception {
+    public IngredientCommand findByIngredientIdAndRecipeId(String recipeId, String ingredientId) {
 
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
         if (!recipeOptional.isPresent()) {
 
             log.error("recipe id not found. Id: " + recipeId);
-            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
+            throw new NotFoundException("Recipe with ID value " + recipeId);
         }
 
         Recipe recipe = recipeOptional.get();
@@ -50,22 +50,24 @@ public class IngredientServiceImpl implements IngredientService {
         if (!ingredientCommandOptional.isPresent()) {
 
             log.error("Ingredient id not found: " + ingredientId);
-            throw new NotFoundException("Ingredient with ID value " + ingredientId.toString());
+            throw new NotFoundException("Ingredient with ID value " + ingredientId);
         }
+        IngredientCommand ingredientCommand = ingredientCommandOptional.get();
+        ingredientCommand.setRecipeId(recipeId);
 
-        return ingredientCommandOptional.get();
+        return ingredientCommand;
     }
 
+
     @Override
-    @Transactional
     //models are combined in persistent layer but incoming commands are singletons,
     //and converters process them individually. So need to pick out the updated properties manually
     //and put them into the combined models
-    public IngredientCommand saveIngredientCommand(IngredientCommand ingredientCommand) throws Exception {
+    public IngredientCommand saveIngredientCommand(IngredientCommand ingredientCommand) {
         //command->RecipeID->Recipe
         Optional<Recipe> recipeOptional = recipeRepository.findById(ingredientCommand.getRecipeId());
         if (!recipeOptional.isPresent()) {
-            log.debug("Recipe not found for id: " + ingredientCommand.getRecipeId());
+            log.warn("Recipe not found for id: " + ingredientCommand.getRecipeId());
             return new IngredientCommand();
         } else {
             // ->the ingredient(matches command.Id)
@@ -81,7 +83,7 @@ public class IngredientServiceImpl implements IngredientService {
                 ingredient.setUom(unitOfMeasureRepository.findById(ingredientCommand.getUom().getId())
                         .orElseThrow(() -> new RuntimeException("cannot find uom" + ingredientCommand.getUom().getId())));
             } else {
-                log.debug("Creating new ingredient");
+                log.warn("Creating new ingredient");
                 Ingredient ingredient = ingredientCommand2Ingredient.convert(ingredientCommand);
                 recipe.addIngredient(ingredient);
 
@@ -92,34 +94,52 @@ public class IngredientServiceImpl implements IngredientService {
             Optional<Ingredient> ingredientOptional1 = savedRecipe.getIngredients().stream()
                     .filter(ingredient1 -> ingredient1.getId().equals(ingredientCommand.getId())).findFirst();
             if (!ingredientOptional1.isPresent()) {
-                log.debug("recipe's ingredients do not contain command");
+                log.warn("recipe's ingredients do not contain command");
                 ingredientOptional1 = savedRecipe.getIngredients().stream()
                         .filter(recipeIngredients -> recipeIngredients.getDescription().equals(ingredientCommand.getDescription()))
                         .filter(recipeIngredients -> recipeIngredients.getAmount().equals(ingredientCommand.getAmount()))
                         .filter(recipeIngredients -> recipeIngredients.getUom().getId().equals(ingredientCommand.getUom().getId()))
                         .findFirst();
             }
-            return ingredient2IngredientCommand.convert(ingredientOptional1.get());
+            IngredientCommand ingredientCommand1 = ingredient2IngredientCommand.convert(ingredientOptional1.get());
+            ingredientCommand1.setRecipeId(recipe.getId());
+            return ingredientCommand1;
         }
     }
 
     @Override
-    public void deleteById(Long recipeId, Long ingredientId) throws Exception {
+    public void deleteById(String recipeId, String ingredientId) {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if (!optionalRecipe.isPresent()) {
-            throw new NotFoundException("Recipe with ID value " + recipeId.toString());
+            throw new NotFoundException("Recipe with ID value " + recipeId);
         } else {
             Recipe recipe = optionalRecipe.get();
             Optional<Ingredient> ingredient2Del = recipe.getIngredients().stream().filter(ingredient -> ingredient.getId().equals(ingredientId))
                     .findFirst();
             if (!ingredient2Del.isPresent()) {
-                throw new NotFoundException("Ingredient with ID value " + ingredientId.toString());
+                throw new NotFoundException("Ingredient with ID value " + ingredientId);
             } else {
-                ingredient2Del.get().setRecipe(null);
+//                ingredient2Del.get().setRecipe(null);
                 recipe.getIngredients().remove(ingredient2Del.get());
                 recipeRepository.save(recipe);
             }
         }
+    }
+
+    @Override
+    public IngredientCommand createIngredient(String recipeId) {
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if (optionalRecipe.isPresent()) {
+            Ingredient ingredient = new Ingredient();
+            ingredient.setUom(new UnitOfMeasure());
+            IngredientCommand ingredientCommand = ingredient2IngredientCommand.convert(ingredient);
+            ingredientCommand.setRecipeId(recipeId);
+            return ingredientCommand;
+        } else {
+            throw new NotFoundException("Recipe with ID value " + recipeId);
+        }
+
+
     }
 
 }

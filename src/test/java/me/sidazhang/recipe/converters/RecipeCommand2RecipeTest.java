@@ -12,43 +12,43 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class RecipeCommand2RecipeTest {
-    public static final Long RECIPE_ID = 1L;
-    public static final Integer COOK_TIME = Integer.valueOf("5");
-    public static final Integer PREP_TIME = Integer.valueOf("7");
-    public static final String DESCRIPTION = "My Recipe";
-    public static final String DIRECTIONS = "Directions";
-    public static final Difficulty DIFFICULTY = Difficulty.EASY;
-    public static final Integer SERVINGS = Integer.valueOf("3");
-    public static final String SOURCE = "Source";
-    public static final String URL = "Some URL";
-    public static final Long CAT_ID_1 = 1L;
-    public static final Long CAT_ID2 = 2L;
-    public static final Long INGRED_ID_1 = 3L;
-    public static final Long INGRED_ID_2 = 4L;
-    public static final Long NOTES_ID = 9L;
+    private static final String RECIPE_ID = "1";
+    private static final Integer COOK_TIME = Integer.valueOf("5");
+    private static final Integer PREP_TIME = Integer.valueOf("7");
+    private static final String DESCRIPTION = "My Recipe";
+    private static final String DIRECTIONS = "Directions";
+    private static final Difficulty DIFFICULTY = Difficulty.EASY;
+    private static final Integer SERVINGS = Integer.valueOf("3");
+    private static final String SOURCE = "Source";
+    private static final String URL = "Some URL";
+    private static final String CAT_ID_1 = "1";
+    private static final String CAT_ID2 = "2";
+    private static final String INGRED_ID_1 = "3";
+    private static final String INGRED_ID_2 = "4";
+    private static final String NOTES_ID = "9";
 
     RecipeCommand2Recipe recipeCommand2Recipe;
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         recipeCommand2Recipe = new RecipeCommand2Recipe(new CategoryCommand2Category(),
                 new IngredientCommand2Ingredient(new UnitOfMeasureCommand2UnitOfMeasure()),
                 new NotesCommand2Notes());
     }
 
     @Test
-    public void testNullObject() throws Exception {
+    public void testNullObject() {
         assertNull(recipeCommand2Recipe.convert(null));
     }
 
     @Test
-    public void testEmptyObject() throws Exception {
+    public void testEmptyObject() {
         assertNotNull(recipeCommand2Recipe.convert(new RecipeCommand()));
     }
 
     @Test
-    public void convert() throws Exception {
+    public void convert() {
         //given
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId(RECIPE_ID);

@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,9 +31,8 @@ public class RecipeServiceIT {
     @Autowired
     Recipe2RecipeCommand recipe2RecipeCommand;
 
-    @Transactional
     @Test
-    public void testSaveOfDescription() throws Exception {
+    public void testSaveOfDescription() {
         //given
         Iterable<Recipe> recipes = recipeRepository.findAll();
         Recipe testRecipe = recipes.iterator().next();
