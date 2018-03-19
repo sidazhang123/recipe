@@ -34,35 +34,35 @@ public class IngredientController {
 
     @RequestMapping("/recipe/{id1}/ingredient/{id2}/show")
     public String showIngredient(@PathVariable String id1, @PathVariable String id2, Model model) throws Exception {
-        model.addAttribute("ingredient", ingredientService.findByIngredientIdAndRecipeId(id1, id2));
+        model.addAttribute("ingredient", ingredientService.findByIngredientIdAndRecipeId(id1, id2).block());
         return "recipe/ingredient/show";
     }
 
     @RequestMapping("/recipe/{id1}/ingredient/{id2}/update")
     public String updateIngredient(@PathVariable String id1, @PathVariable String id2, Model model) throws Exception {
-        model.addAttribute("ingredient", ingredientService.findByIngredientIdAndRecipeId(id1, id2));
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        model.addAttribute("ingredient", ingredientService.findByIngredientIdAndRecipeId(id1, id2).block());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
         return "recipe/ingredient/ingredientform";
     }
 
     @RequestMapping("/recipe/{id}/ingredient/new")
     public String newIngredient(@PathVariable String id, Model model) {
-
-        model.addAttribute("ingredient", ingredientService.createIngredient(id));
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        recipeService.findById(id); //verify existence
+        model.addAttribute("ingredient", ingredientService.createIngredient(id).block());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
         return "/recipe/ingredient/ingredientform";
 
     }
 
     @RequestMapping("recipe/{id1}/ingredient/{id2}/delete")
     public String deleteIngredient(@PathVariable String id1, @PathVariable String id2) throws Exception {
-        ingredientService.deleteById(id1, id2);
+        ingredientService.deleteById(id1, id2).block();
         return "redirect:/recipe/" + id1 + "/ingredients";
     }
 
     @RequestMapping(value = "recipe/{recipeId}/ingredient", method = RequestMethod.POST) //{} auto bind
     public String saveOrUpdate(@ModelAttribute IngredientCommand command) throws Exception {
-        IngredientCommand ingredientCommand = ingredientService.saveIngredientCommand(command);
+        IngredientCommand ingredientCommand = ingredientService.saveIngredientCommand(command).block();
 
         log.warn("saved recipe id:" + ingredientCommand.getRecipeId());
         log.warn("saved ingredient id:" + ingredientCommand.getId());
