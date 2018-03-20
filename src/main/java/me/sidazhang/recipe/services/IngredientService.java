@@ -10,5 +10,5 @@ public interface IngredientService {
 
     Mono<Void> deleteById(String recipeId, String ingredientId) throws Exception;
 
-    Mono<IngredientCommand> createIngredient(String recipeId);
+    IngredientCommand createIngredient(String recipeId);
 }

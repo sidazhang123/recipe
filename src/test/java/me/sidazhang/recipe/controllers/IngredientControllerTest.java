@@ -115,7 +115,7 @@ public class IngredientControllerTest {
     public void newIngredientForm() throws Exception {
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setId("1");
-        when(ingredientService.createIngredient(anyString())).thenReturn(Mono.just(ingredientCommand));
+        when(ingredientService.createIngredient(anyString())).thenReturn(ingredientCommand);
         when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
         mockMvc.perform(get("/recipe/1/ingredient/new"))
                 .andExpect(status().isOk())

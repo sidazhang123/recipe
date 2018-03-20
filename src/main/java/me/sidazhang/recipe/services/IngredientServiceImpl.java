@@ -56,6 +56,7 @@ public class IngredientServiceImpl implements IngredientService {
     //and put them into the combined models
     public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand ingredientCommand) {
         //command->RecipeID->Recipe
+        log.warn(ingredientCommand.getRecipeId());
         Optional<Recipe> recipeOptional = recipeReactiveRepository.findById(ingredientCommand.getRecipeId()).blockOptional();
         if (!recipeOptional.isPresent()) {
             log.warn("Recipe not found for id: " + ingredientCommand.getRecipeId());
@@ -121,14 +122,14 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Mono<IngredientCommand> createIngredient(String recipeId) {
+    public IngredientCommand createIngredient(String recipeId) {
         Optional<Recipe> optionalRecipe = recipeReactiveRepository.findById(recipeId).blockOptional();
         if (optionalRecipe.isPresent()) {
             Ingredient ingredient = new Ingredient();
             ingredient.setUom(new UnitOfMeasure());
             IngredientCommand ingredientCommand = ingredient2IngredientCommand.convert(ingredient);
             ingredientCommand.setRecipeId(recipeId);
-            return Mono.just(ingredientCommand);
+            return Mono.just(ingredientCommand).block();
         } else {
             throw new NotFoundException("Recipe with ID value " + recipeId);
         }

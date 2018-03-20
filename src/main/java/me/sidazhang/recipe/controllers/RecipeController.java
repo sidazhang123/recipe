@@ -2,36 +2,40 @@ package me.sidazhang.recipe.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sidazhang.recipe.commands.RecipeCommand;
+import me.sidazhang.recipe.exceptions.NotFoundException;
 import me.sidazhang.recipe.services.RecipeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.exceptions.TemplateInputException;
 
 @Controller
 @Slf4j
 public class RecipeController {
     private RecipeService recipeService;
+    private WebDataBinder webDataBinder;
 
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder) {
+        this.webDataBinder = webDataBinder;
+    }
+
     @RequestMapping("/recipe/{id}/show")
     public String showById(@PathVariable("id") String id, Model model) {
-        model.addAttribute("recipe", recipeService.findById(id).block());
+        model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/show";
     }
 
     @RequestMapping("/recipe/new")
     public String create(Model model) {
-        RecipeCommand recipeCommand = recipeService.createRecipe().block();
-        model.addAttribute("recipe", recipeCommand);
+        model.addAttribute("recipe", recipeService.createRecipe());
         return "recipe/recipeform";
     }
 
@@ -42,7 +46,9 @@ public class RecipeController {
     }
 
     @RequestMapping(value = "/recipe", method = RequestMethod.POST)
-    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
+    public String saveOrUpdate(@ModelAttribute("recipe") RecipeCommand recipeCommand) {
+        webDataBinder.validate();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.warn(objectError.toString());
@@ -58,6 +64,19 @@ public class RecipeController {
         log.warn("delete id {" + id + "}");
         recipeService.deleteById(id);
         return "redirect:/";
+    }
+
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NotFoundException.class, TemplateInputException.class})
+    public String handleNotFound(Exception exception, Model model) {
+
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+
+        model.addAttribute("exception", exception);
+
+        return "errors/404";
     }
 
 

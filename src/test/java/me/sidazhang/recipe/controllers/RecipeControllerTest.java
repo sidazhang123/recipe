@@ -49,7 +49,7 @@ public class RecipeControllerTest {
     @Test
     public void testGetNewRecipeForm() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        when(recipeService.createRecipe()).thenReturn(Mono.just(command));
+        when(recipeService.createRecipe()).thenReturn(command);
         mockMvc.perform(get("/recipe/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/recipeform"))

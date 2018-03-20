@@ -63,8 +63,8 @@ public class RecipeServiceImpl implements RecipeService {
 
 
     @Override
-    public Mono<RecipeCommand> createRecipe() {
-        return saveRecipeCommand(new RecipeCommand());
+    public RecipeCommand createRecipe() {
+        return saveRecipeCommand(new RecipeCommand()).block();
     }
 
     @Override
