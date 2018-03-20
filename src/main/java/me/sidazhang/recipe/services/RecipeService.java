@@ -2,19 +2,19 @@ package me.sidazhang.recipe.services;
 
 import me.sidazhang.recipe.commands.RecipeCommand;
 import me.sidazhang.recipe.models.Recipe;
-
-import java.util.Set;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface RecipeService {
-    Set<Recipe> getRecipes();
+    Flux<Recipe> getRecipes();
 
-    Recipe findById(String id);
+    Mono<Recipe> findById(String id);
 
-    RecipeCommand saveRecipeCommand(RecipeCommand command);
+    Mono<RecipeCommand> saveRecipeCommand(RecipeCommand command);
 
-    RecipeCommand findCommandById(String id);
+    Mono<RecipeCommand> findCommandById(String id);
 
-    RecipeCommand createRecipe();
+    Mono<RecipeCommand> createRecipe();
 
-    void deleteById(String id);
+    Mono<Void> deleteById(String id);
 }

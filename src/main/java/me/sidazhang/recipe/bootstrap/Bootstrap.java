@@ -8,7 +8,6 @@ import me.sidazhang.recipe.repositories.UnitOfMeasureRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Override
-    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         loadCategories();
         loadUom();
