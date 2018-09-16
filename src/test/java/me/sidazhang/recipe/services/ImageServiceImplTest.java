@@ -1,5 +1,6 @@
 package me.sidazhang.recipe.services;
 
+
 import me.sidazhang.recipe.models.Recipe;
 import me.sidazhang.recipe.repositories.RecipeRepository;
 import org.junit.Before;
@@ -32,7 +33,7 @@ public class ImageServiceImplTest {
     private ImageService imageService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         imageService = new ImageServiceImpl(recipeRepository);
